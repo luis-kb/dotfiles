@@ -1,0 +1,161 @@
+#+TITLE: Simple emacs configuration
+#+AUTHOR: Luis Diaz
+
+
+* Misc Configuration
+
+** Save and backup files
+
+These can get really annoying, therefore, let's go ahead and move them
+to a central location.
+
+#+begin_src emacs-lisp
+;; Create a directory for backups and auto-saves if it doesn't exist
+(let ((backup-dir "~/.config/emacs/backups/"))
+  (when (not (file-directory-p backup-dir))
+    (make-directory backup-dir t))
+
+  ;; Configure backup files to be stored in the centralized directory
+  (setq backup-directory-alist `(("." . ,backup-dir)))
+
+  ;; Configure auto-save files to be stored in the centralized directory
+  (setq auto-save-file-name-transforms `((".*" ,(concat backup-dir "auto-save-") t)))
+  (setq auto-save-list-file-prefix (concat backup-dir "auto-save-list")))
+#+end_src
+
+* Display
+
+** Toolbars etc
+
+The toolbars help nobody...
+
+#+begin_src emacs-lisp
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+#+end_src
+
+** Pretty colours
+
+#+begin_src emacs-lisp
+  (load-theme 'leuven-dark)
+#+end_src
+
+** Relative line numbers
+
+Useful stuff from the vim days:
+
+#+begin_src emacs-lisp
+  ;; Make sure we show line numbers
+  (display-line-numbers-mode)
+
+  ;; Set the line numbers to relative
+  (setq display-line-numbers 'relative)
+#+end_src
+
+** Maximisation
+
+Make sure that we're always starting emacs in fullscreen mode.
+
+#+begin_src emacs-lisp
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+#+end_src
+
+* Org Mode
+
+** Org Tempo
+
+Very useful org quoting commands such as `<q` and `<s`
+
+#+begin_src emacs-lisp
+  (use-package org-tempo)
+#+end_src
+
+** Fill mode
+
+Start auto fill mode whenever org mode is started
+
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook 'auto-fill-mode)
+#+end_src
+
+* Languages
+
+** Tree sitter
+
+Better syntax highlighting and parsing with tree sitter
+
+#+begin_src emacs-lisp
+  (use-package tree-sitter
+    :ensure t)
+  (use-package tree-sitter-langs
+    :ensure t)
+#+end_src
+
+Then we need to set up the language source for common languages that
+we use and will need tree-sitter support for:
+
+#+begin_src emacs-lisp
+  (setq treesit-language-source-alist
+   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+     (c "https://github.com/tree-sitter/tree-sitter-c")
+     (cmake "https://github.com/uyha/tree-sitter-cmake")
+     (common-lisp "https://github.com/tree-sitter-grammars/tree-sitter-commonlisp")
+     (css "https://github.com/tree-sitter/tree-sitter-css")
+     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+     (elixir "https://github.com/elixir-lang/tree-sitter-elixir")
+     (erlang "https://github.com/WhatsApp/tree-sitter-erlang")
+     (go "https://github.com/tree-sitter/tree-sitter-go")
+     (haskell "https://github.com/tree-sitter/tree-sitter-haskell")
+     (html "https://github.com/tree-sitter/tree-sitter-html")
+     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+     (json "https://github.com/tree-sitter/tree-sitter-json")
+     (make "https://github.com/alemuller/tree-sitter-make")
+     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+     (ocaml "https://github.com/tree-sitter/tree-sitter-ocaml")
+     (python "https://github.com/tree-sitter/tree-sitter-python")
+     (rust "https://github.com/tree-sitter/tree-sitter-rust")
+     (toml "https://github.com/tree-sitter/tree-sitter-toml")
+     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+#+end_src
+
+** Mapping modes
+
+Make sure that we start language specific modes whenever we open a
+file with that extension:
+
+*** Typescript/TSX
+
+#+begin_src emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+#+end_src
+
+*** Javascript/JSX
+
+#+begin_src emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . js-jsx-mode))
+#+end_src
+
+*** Rust
+
+#+begin_src emacs-lisp
+  (use-package rust-mode
+  :ensure t
+  :init
+  (setq rust-mode-treesitter-derive t))
+#+end_src
+
+*** Common lisp
+
+#+begin_src emacs-lisp
+  (use-package slime
+    :ensure t)
+
+  (setq inferior-lisp-program "sbcl")
+
+  (add-to-list 'auto-mode-alist '("\\.cl\\'" . common-lisp-mode))
+#+end_src
