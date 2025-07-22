@@ -1,6 +1,18 @@
 #+TITLE: Simple emacs configuration
 #+AUTHOR: Luis Diaz
 
+* AI
+
+** GPTel
+
+#+BEGIN_SRC emacs-lisp
+(use-package gptel
+  :ensure t
+  :config
+  (setq gptel-default-api 'google)
+  (setq gptel-default-model 'gemini-pro)
+  (setq gptel-live-update t))
+#+END_SRC
 
 * Misc Configuration
 
