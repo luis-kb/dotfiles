@@ -4,9 +4,9 @@
 vim.g.mapleader = ","
 vim.g.maplocalleader = ","
 
-vim.opt.number = true
+-- vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.signcolumn = "number"
+-- vim.opt.signcolumn = "number"
 
 
 -- Tabs and spaces

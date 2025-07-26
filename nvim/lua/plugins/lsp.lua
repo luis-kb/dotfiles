@@ -4,7 +4,7 @@
 -- Servers list
 -- ============
 local servers = {
-    clangd = {},
+    -- clangd = {},
     denols = {},
     emmet_ls = {},
     eslint = {},
