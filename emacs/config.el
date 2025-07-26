@@ -1,3 +1,31 @@
+(use-package eglot
+  :ensure t
+  :config
+  (add-hook 'c-mode-hook 'eglot-ensure)
+  (add-hook 'c++-mode-hook 'eglot-ensure))
+(use-package company
+:after eglot
+:hook (eglot-managed-mode . company-mode))
+
+(use-package gptel
+  :ensure t
+  :config
+  (setq gptel-default-api 'google)
+  (setq gptel-default-model 'gemini-pro)
+  (setq gptel-live-update t))
+
+;; Create a directory for backups and auto-saves if it doesn't exist
+(let ((backup-dir "~/.config/emacs/backups/"))
+  (when (not (file-directory-p backup-dir))
+    (make-directory backup-dir t))
+
+  ;; Configure backup files to be stored in the centralized directory
+  (setq backup-directory-alist `(("." . ,backup-dir)))
+
+  ;; Configure auto-save files to be stored in the centralized directory
+  (setq auto-save-file-name-transforms `((".*" ,(concat backup-dir "auto-save-") t)))
+  (setq auto-save-list-file-prefix (concat backup-dir "auto-save-list")))
+
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
@@ -15,6 +43,15 @@
 (use-package org-tempo)
 
 (add-hook 'org-mode-hook 'auto-fill-mode)
+
+(use-package org-roam
+  :ensure t
+  :config
+  (make-directory "~/.roam")
+  (setq org-roam-directory (file-truename "~/.roam")))
+
+(use-package vertico
+  :ensure t)
 
 (use-package tree-sitter
   :ensure t)

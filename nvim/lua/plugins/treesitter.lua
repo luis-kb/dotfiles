@@ -1,0 +1,43 @@
+return {
+    'nvim-treesitter/nvim-treesitter',
+    branch = 'master',
+    lazy = false,
+    build = ':TSUpdate',
+    config = function()
+        require('nvim-treesitter.configs').setup({
+            ensure_installed = {
+                'bash',
+                'c',
+                'css',
+                'commonlisp',
+                'dockerfile',
+                'go',
+                'haskell',
+                'ini',
+                'javascript',
+                'jsdoc',
+                'json',
+                'kdl',
+                'lua',
+                'make',
+                'markdown',
+                'markdown_inline',
+                'python',
+                'query',
+                'rust',
+                'sql',
+                'toml',
+                'tsx',
+                'typescript',
+                'vim',
+                'vimdoc',
+                'yaml',
+            },
+            sync_install = false,
+            auto_install = true,
+            highlight = {
+                enable = true,
+            },
+        })
+    end,
+}

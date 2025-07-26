@@ -1,6 +1,19 @@
 #+TITLE: Simple emacs configuration
 #+AUTHOR: Luis Diaz
 
+* LSP
+
+#+begin_src emacs-lisp
+  (use-package eglot
+    :ensure t
+    :config
+    (add-hook 'c-mode-hook 'eglot-ensure)
+    (add-hook 'c++-mode-hook 'eglot-ensure))
+  (use-package company
+  :after eglot
+  :hook (eglot-managed-mode . company-mode))  
+#+end_src
+
 * AI
 
 ** GPTel
@@ -89,6 +102,29 @@ Start auto fill mode whenever org mode is started
 
 #+begin_src emacs-lisp
   (add-hook 'org-mode-hook 'auto-fill-mode)
+#+end_src
+
+** Roam
+
+Zettelkasten stuff
+
+#+begin_src emacs-lisp
+  (use-package org-roam
+    :ensure t
+    :config
+    (make-directory "~/.roam")
+    (setq org-roam-directory (file-truename "~/.roam")))
+
+#+end_src
+
+* Vertico
+
+Mini buffer better completions
+
+#+begin_src emacs-lisp
+  (use-package vertico
+    :ensure t)
+
 #+end_src
 
 * Languages
