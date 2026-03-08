@@ -1,0 +1,4 @@
+# Neovim
+
+- [ ] Suggestions/completion
+- [ ] Snippets
