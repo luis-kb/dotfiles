@@ -79,7 +79,6 @@ end
 -- ==============
 local function setup()
     require('mason').setup()
-    local lspconfig = require('lspconfig')
     local mason_lspconfig = require('mason-lspconfig')
 
     local capabilities = require('cmp_nvim_lsp').default_capabilities()

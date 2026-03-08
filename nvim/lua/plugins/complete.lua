@@ -4,6 +4,9 @@ end
 return {
   'hrsh7th/nvim-cmp',
   dependencies = {
+    -- Snippet Engine & its associated nvim-cmp source
+    'saadparwaiz1/cmp_luasnip',
+
     -- Adds LSP completion capabilities
     'hrsh7th/cmp-nvim-lsp',
   },

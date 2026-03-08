@@ -11,6 +11,8 @@ nmap('<leader>v', '<C-w>v', common_opts)
 nmap('<leader>s', '<C-w>s', common_opts)
 -- Opening as tab
 nmap('<leader>T', '<C-w>T', common_opts)
+nmap('_', ':Sex<CR>', common_opts)
+nmap('|', ':Vex<CR>', common_opts)
 
 -- Motions
 -- =======

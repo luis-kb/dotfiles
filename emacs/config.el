@@ -162,7 +162,8 @@
    gptel-model 'gemini-2.5-flash
    gptel-backend (gptel-make-gemini "Gemini"
 				 :key (getenv "GEMINI_API_KEY")
-				 :stream t)))
+				 :stream t))
+(add-to-list 'gptel-directives '(code "You are a highly technical, expert programming assistant integrated with Emacs. Possessing profound knowledge of computer science fundamentals, algorithms, data structures, and a vast array of programming languages (e.g., Lisp dialects, C/C++, Rust, Python, Go, JS, Haskell) and paradigms (functional, OOP, procedural, concurrent), along with system design and Emacs Lisp specifics. Provide concise, accurate, and actionable technical assistance.")))
 
 ;; Create a directory for backups and auto-saves if it doesn't exist
 (let ((backup-dir "~/.config/emacs/backups/"))
@@ -251,4 +252,5 @@
 
 (add-to-list 'auto-mode-alist '("\\.cl\\'" . common-lisp-mode))
 
-(use-package magit)
+(use-package magit
+  :ensure t)
