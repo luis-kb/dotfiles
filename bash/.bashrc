@@ -142,9 +142,6 @@ eval "$(direnv hook bash)"
 export PATH=$PATH:/usr/local/go/bin
 export PATH=$PATH:"$(go env GOPATH)/bin"
 
-# ASDF
-. <(asdf completion bash)
-
 
 # LLMs
 export ANTHROPIC_API_KEY=$(secret-tool lookup llm anthropic)
@@ -177,3 +174,86 @@ today() {
     cd $NOTES_PATH && nvim $(date +%d-%m-%y).md && cd -
 }
 
+
+# =====================================
+# ========= Bluma file ================
+# =====================================
+#
+# Investigate the zeigarnik effect further
+bluma() {
+    nvim ~/.bluma
+}
+
+bloop() {
+    echo "@loop: $1" >> ~/.bluma
+}
+
+binterrupt() {
+    echo "---INTERRUPTED $(date +%H:%M)---" >> ~/.bluma
+    nvim +'normal Go' ~/.bluma
+}
+
+
+# =====================================
+# ========= Task tracking =============
+# =====================================
+
+b_t() {
+    # Start a task: t "fix the login bug"
+    echo "$1" > ~/.tmux_task
+    [[ -n "$TMUX" ]] && tmux refresh-client -S
+    echo "Task started: $1"
+}
+
+b_td() {
+    # Open long-form task detail in nvim (freeform scratch file)
+    nvim ~/.tmux_task_detail
+    # Note: detail file is NOT cleared on ti/tre — persists as notes
+}
+
+b_ti() {
+    # Interrupt current task (saves to bluma + last)
+    local task=$(cat ~/.tmux_task 2>/dev/null)
+    [[ -z "$task" ]] && echo "No active task" && return
+    echo "$task" > ~/.tmux_task_last
+    echo "---INTERRUPTED $(date +%H:%M): $task---" >> ~/.bluma
+    echo "" > ~/.tmux_task
+    [[ -n "$TMUX" ]] && tmux refresh-client -S
+    echo "Interrupted: $task"
+}
+
+b_tre() {
+    # Resume last interrupted task
+    local last=$(cat ~/.tmux_task_last 2>/dev/null)
+    [[ -z "$last" ]] && echo "No interrupted task" && return
+    echo "$last" > ~/.tmux_task
+    echo "---RESUMED $(date +%H:%M): $last---" >> ~/.bluma
+    [[ -n "$TMUX" ]] && tmux refresh-client -S
+    echo "Resumed: $last"
+}
+
+b_tc() {
+    # Clear task (done)
+    local task=$(cat ~/.tmux_task 2>/dev/null)
+    echo "" > ~/.tmux_task
+    [[ -n "$TMUX" ]] && tmux refresh-client -S
+    [[ -n "$task" ]] && echo "Done: $task"
+}
+
+
+# ===========================
+# ==== Docker commands ======
+# ===========================
+
+removecontainers() {
+    docker stop $(docker ps -aq)
+    docker rm $(docker ps -aq)
+}
+
+armageddon() {
+    removecontainers
+    docker network prune -f
+    docker rmi -f $(docker images --filter dangling=true -qa)
+    docker volume rm $(docker volume ls --filter dangling=true -q)
+    docker rmi -f $(docker images -qa)
+}
