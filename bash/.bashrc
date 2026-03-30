@@ -257,3 +257,27 @@ armageddon() {
     docker volume rm $(docker volume ls --filter dangling=true -q)
     docker rmi -f $(docker images -qa)
 }
+
+# ==================
+# === Useful git ===
+# ==================
+
+# Stash changes, pull rebase and pop changes (git state-saving pull)
+gsspull() {
+    if ! git diff --quiet || ! git diff --cached --quiet; then
+        echo 'something to stash'
+        git stash --quiet
+        STASH=true
+    else
+        echo 'nothing to stash'
+        STASH=false
+    fi
+
+    git pull --rebase
+
+    if $STASH; then
+        echo 'popping the stash'
+        git stash pop --quiet
+    fi
+}
+. "$HOME/.cargo/env"
